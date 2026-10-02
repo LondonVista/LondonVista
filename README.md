@@ -13,6 +13,8 @@ An always-on-top widget that shows how much of your AI quota you have used: Grok
 
 <img src="https://raw.githubusercontent.com/LondonVista/biguwidget/main/docs/screenshot.png" alt="BigUwidget quota cards" width="480">
 
+Also available as a one-click Grok Bot template: [Weekly Usage](https://x.ai/bot/TEWOTNV18AmN4GtqjtUSv). It installs the Linux widget on your Grok Bot computer.
+
 #### [iPhone Battery Widget](https://github.com/LondonVista/iPhoneBatteryWidget) · Swift · macOS
 A translucent floating battery widget and dashboard for MacBooks, iPhones and iPads. It shows live temperature, a battery health history and how the battery is wearing over time.
 
