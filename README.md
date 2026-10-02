@@ -13,7 +13,7 @@ An always-on-top widget that shows how much of your AI quota you have used: Grok
 
 <img src="https://raw.githubusercontent.com/LondonVista/biguwidget/main/docs/screenshot.png" alt="BigUwidget quota cards" width="480">
 
-Also available as a one-click Grok Bot template: [Weekly Usage](https://x.ai/bot/TEWOTNV18AmN4GtqjtUSv). It installs the Linux widget on your Grok Bot computer.
+Also available as a one-click Grok Bot template: [Weekly Usage](https://x.ai/bot/TEWOTNV18AmN4GtqjtUSv).
 
 #### [iPhone Battery Widget](https://github.com/LondonVista/iPhoneBatteryWidget) · Swift · macOS
 A translucent floating battery widget and dashboard for MacBooks, iPhones and iPads. It shows live temperature, a battery health history and how the battery is wearing over time.
@@ -21,6 +21,10 @@ A translucent floating battery widget and dashboard for MacBooks, iPhones and iP
 [![downloads](https://img.shields.io/github/downloads/LondonVista/iPhoneBatteryWidget/total?label=downloads)](https://github.com/LondonVista/iPhoneBatteryWidget/releases) [![release](https://img.shields.io/github/v/release/LondonVista/iPhoneBatteryWidget)](https://github.com/LondonVista/iPhoneBatteryWidget/releases/latest)
 
 <img src="https://raw.githubusercontent.com/LondonVista/iPhoneBatteryWidget/main/assets/widget-floating-preview.png" alt="iPhone Battery Widget" width="240">
+
+### 🤖 Grok Bot templates
+- **[Weekly Usage](https://x.ai/bot/TEWOTNV18AmN4GtqjtUSv):** installs BigUwidget on your Grok Bot computer to show what is left of the week's usage.
+- **[Video editor](https://x.ai/bot/7xlXwKtAilGUrtvfM8tHL):** cuts clips from long videos, writes the caption script for you to check, burns in word-highlighted subtitles and shares the finished file through Google Drive.
 
 ### 🧰 How I work
 
