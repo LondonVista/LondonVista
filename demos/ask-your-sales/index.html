@@ -1,0 +1,349 @@
+<title>Ask Your Sales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one column on phones, two on desktop. Ask panel first, numbers after. Till-receipt details for data. */
+:root {
+  --bg: #f3f4f1;
+  --surface: #ffffff;
+  --ink: #1d211f;
+  --muted: #5d6662;
+  --line: #dde1dc;
+  --accent: #1f6b4f;
+  --accent-soft: #e2efe8;
+  --warn: #a4560f;
+  --warn-soft: #f8ebdc;
+  --bar: #9fc3b2;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141816; --surface: #1c211f; --ink: #e8ece9; --muted: #9aa5a0; --line: #2d3532;
+    --accent: #6fcfa6; --accent-soft: #1f3a2f; --warn: #f0a865; --warn-soft: #3a2a1a; --bar: #3f7a61;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141816; --surface: #1c211f; --ink: #e8ece9; --muted: #9aa5a0; --line: #2d3532;
+  --accent: #6fcfa6; --accent-soft: #1f3a2f; --warn: #f0a865; --warn-soft: #3a2a1a; --bar: #3f7a61;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 48px; display: grid; gap: 20px; }
+header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
+h1 { font-family: var(--font-display); font-size: clamp(28px, 6vw, 40px); line-height: 1.05; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+.sub { color: var(--muted); margin: 6px 0 0; }
+.tag { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--warn); background: var(--warn-soft); padding: 4px 8px; border-radius: 4px; }
+.file { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.btn { font: 600 14px var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn:focus-visible, textarea:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.btn[disabled] { opacity: 0.55; cursor: default; }
+.grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 820px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+section { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; min-width: 0; }
+h2 { font-family: var(--font-display); font-size: 20px; margin: 0 0 4px; }
+.hint { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+.ask textarea { width: 100%; min-height: 64px; resize: vertical; font: 15px var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.chip { font: 13px var(--font-body); background: var(--accent-soft); color: var(--ink); border: 0; border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.answer { margin-top: 14px; padding: 14px; border-left: 3px solid var(--accent); background: var(--bg); border-radius: 0 8px 8px 0; white-space: pre-wrap; min-height: 48px; }
+.answer.empty { color: var(--muted); }
+.note { color: var(--warn); font-size: 13px; margin-top: 8px; }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 480px) { .kpis { grid-template-columns: minmax(0, 1fr); } }
+.kpi .label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.kpi .value { font-family: var(--font-display); font-size: 26px; font-variant-numeric: tabular-nums; }
+.delta { font-family: var(--font-mono); font-size: 12px; }
+.up { color: var(--accent); } .down { color: var(--warn); }
+.chart { overflow-x: auto; margin-top: 12px; }
+.chart svg { display: block; width: 100%; height: auto; min-width: 320px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font: 500 11px var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 6px 4px; border-bottom: 1px solid var(--line); }
+td { padding: 7px 4px; border-bottom: 1px dashed var(--line); vertical-align: middle; }
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.share { height: 6px; background: var(--bar); border-radius: 3px; }
+.flag { font: 500 11px var(--font-mono); color: var(--warn); background: var(--warn-soft); padding: 2px 6px; border-radius: 4px; margin-left: 6px; white-space: nowrap; }
+.tablewrap { overflow-x: auto; }
+footer { color: var(--muted); font-size: 13px; }
+footer code { font-family: var(--font-mono); font-size: 12px; }
+@media (prefers-reduced-motion: no-preference) { .answer { transition: background 0.2s; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <span class="tag" id="dataTag">Sample data · made-up café</span>
+      <h1 id="shopName">Ask your sales</h1>
+      <p class="sub" id="period">Loading sales…</p>
+    </div>
+    <div class="file">
+      <label class="btn" for="csv">Use my own sales file (CSV)</label>
+      <input id="csv" type="file" accept=".csv,text/csv" hidden>
+      <button class="btn" id="resetBtn" type="button" hidden>Back to sample</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section class="ask" aria-labelledby="askTitle">
+      <h2 id="askTitle">Ask a question</h2>
+      <p class="hint">Plain English. Claude reads the sales summary and answers with numbers.</p>
+      <textarea id="q" placeholder="e.g. Which items should I take off the menu?"></textarea>
+      <div class="chips" id="chips"></div>
+      <div class="row">
+        <button class="btn primary" id="askBtn" type="button">Ask</button>
+        <button class="btn" id="stopBtn" type="button" hidden>Stop</button>
+      </div>
+      <div class="answer empty" id="answer" aria-live="polite">Answers appear here.</div>
+      <div class="note" id="askNote" hidden></div>
+    </section>
+
+    <section aria-labelledby="monthTitle">
+      <h2 id="monthTitle">This month at a glance</h2>
+      <p class="hint" id="monthHint"></p>
+      <div class="kpis" id="kpis"></div>
+      <div class="chart" id="weekly"></div>
+    </section>
+  </div>
+
+  <section aria-labelledby="menuTitle">
+    <h2 id="menuTitle">Menu check</h2>
+    <p class="hint">Every item ranked by revenue over the whole period. Flagged items sell least and are worth reviewing.</p>
+    <div class="tablewrap"><table id="items"></table></div>
+  </section>
+
+  <footer>
+    <p>Your own file stays in your browser; only a short summary of totals is sent to Claude when you ask a question. Expected columns: <code>date</code>, <code>time</code> (optional), <code>item</code>, <code>quantity</code>, and <code>price</code> or <code>total</code>. Built by Jacob · LondonVista.</p>
+  </footer>
+</div>
+
+<script>
+const GBP = n => "£" + n.toLocaleString("en-GB", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+const GBP2 = n => "£" + n.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+// ---------- Sample data: a made-up café, Jul–Sep 2026, seeded so it is the same every time ----------
+function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const MENU = [
+  // name, category, price, weight, summer factor (above 1 sells more in July, less by September)
+  ["Flat white", "Coffee", 3.6, 22, 0.9], ["Oat latte", "Coffee", 3.9, 16, 1], ["Cappuccino", "Coffee", 3.5, 12, 0.9],
+  ["Americano", "Coffee", 3.0, 9, 0.95], ["Espresso", "Coffee", 2.4, 4, 1], ["Iced latte", "Coffee", 3.9, 8, 1.8],
+  ["Cold brew", "Coffee", 3.8, 5, 1.9], ["Chai latte", "Tea & other", 3.7, 5, 0.8], ["Matcha latte", "Tea & other", 4.1, 4, 1],
+  ["Hot chocolate", "Tea & other", 3.4, 3, 0.6], ["Turmeric latte", "Tea & other", 3.9, 0.6, 1], ["Lavender lemonade", "Tea & other", 3.8, 0.7, 2],
+  ["Croissant", "Food", 2.9, 9, 1], ["Pain au chocolat", "Food", 3.2, 6, 1], ["Banana bread", "Food", 3.3, 6, 1],
+  ["Bacon roll", "Food", 5.2, 5, 0.9], ["Avocado toast", "Food", 7.5, 4, 1], ["Granola pot", "Food", 4.6, 1.2, 1.2],
+  ["Vegan brownie", "Food", 3.4, 0.9, 1]
+];
+function makeSample() {
+  const rnd = mulberry32(2026), rows = [];
+  const start = Date.UTC(2026, 6, 1), end = Date.UTC(2026, 8, 30);
+  const hourW = [0,0,0,0,0,0,0,3,10,9,6,5,8,7,4,3,2,1,0,0,0,0,0,0];
+  const hourTotal = hourW.reduce((a, b) => a + b, 0);
+  for (let t = start; t <= end; t += 864e5) {
+    const d = new Date(t), dow = d.getUTCDay(), m = d.getUTCMonth();
+    const season = m === 6 ? 1 : m === 7 ? 0.6 : 0.15; // how "summery" the month is
+    const base = dow === 6 ? 235 : dow === 0 ? 195 : dow === 1 ? 150 : 170;
+    const growth = 1 + (t - start) / (end - start) * 0.06;
+    const orders = Math.round(base * growth * (0.9 + rnd() * 0.2));
+    const weights = MENU.map(([, , , w, s]) => w * (1 + (s - 1) * season));
+    const wTotal = weights.reduce((a, b) => a + b, 0);
+    const iso = d.toISOString().slice(0, 10);
+    for (let o = 0; o < orders; o++) {
+      let r = rnd() * hourTotal, h = 0; while ((r -= hourW[h]) > 0) h++;
+      const time = String(h).padStart(2, "0") + ":" + String(Math.floor(rnd() * 60)).padStart(2, "0");
+      const lines = rnd() < 0.55 ? 1 : rnd() < 0.75 ? 2 : 3;
+      for (let l = 0; l < lines; l++) {
+        let x = rnd() * wTotal, i = 0; while ((x -= weights[i]) > 0) i++;
+        rows.push({ date: iso, hour: h, item: MENU[i][0], category: MENU[i][1], qty: 1, total: MENU[i][2] });
+      }
+    }
+  }
+  return rows;
+}
+
+// ---------- CSV import ----------
+function parseCSV(text) {
+  const out = []; let row = [], cell = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) { if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += c; }
+    else if (c === '"') q = true;
+    else if (c === ",") { row.push(cell); cell = ""; }
+    else if (c === "\n" || c === "\r") { if (c === "\r" && text[i + 1] === "\n") i++; row.push(cell); out.push(row); row = []; cell = ""; }
+    else cell += c;
+  }
+  if (cell || row.length) { row.push(cell); out.push(row); }
+  return out.filter(r => r.some(v => v.trim() !== ""));
+}
+function toISO(s) {
+  s = s.trim();
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); if (m) return `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`;
+  m = s.match(/^(\d{1,2})[\/.](\d{1,2})[\/.](\d{2,4})/); // UK style day/month/year
+  if (m) { const y = m[3].length === 2 ? "20" + m[3] : m[3]; return `${y}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`; }
+  return null;
+}
+const money = s => parseFloat(String(s).replace(/[£$€,\s]/g, "")) || 0;
+function rowsFromCSV(text) {
+  const table = parseCSV(text); if (table.length < 2) throw new Error("The file has no rows.");
+  const head = table[0].map(h => h.trim().toLowerCase());
+  const find = re => head.findIndex(h => re.test(h));
+  const iDate = find(/date/), iTime = find(/time/), iItem = find(/^(item|product|name|description)/),
+        iQty = find(/qty|quantity|count/), iTotal = find(/total|gross|amount|sales/), iPrice = find(/price/), iCat = find(/category/);
+  if (iDate < 0 || iItem < 0 || (iTotal < 0 && iPrice < 0))
+    throw new Error("Couldn't find the columns. The file needs date, item, and price or total columns.");
+  const rows = [];
+  for (const r of table.slice(1)) {
+    const date = toISO(r[iDate] || ""); if (!date) continue;
+    const qty = iQty >= 0 ? (parseFloat(r[iQty]) || 1) : 1;
+    const total = iTotal >= 0 ? money(r[iTotal]) : money(r[iPrice]) * qty;
+    let hour = null;
+    const tm = (iTime >= 0 ? r[iTime] : r[iDate]).match(/(\d{1,2}):(\d{2})/); if (tm) hour = +tm[1];
+    rows.push({ date, hour, item: (r[iItem] || "Unknown").trim(), category: iCat >= 0 ? r[iCat].trim() : "", qty, total });
+  }
+  if (!rows.length) throw new Error("No rows with a readable date were found.");
+  return rows;
+}
+
+// ---------- Aggregation ----------
+function summarise(rows) {
+  const months = {}, items = {}, weeks = {}, dow = Array(7).fill(0), hours = Array(24).fill(0), days = new Set();
+  for (const r of rows) {
+    const mk = r.date.slice(0, 7);
+    days.add(r.date);
+    const m = months[mk] ??= { revenue: 0, qty: 0, days: new Set() }; m.revenue += r.total; m.qty += r.qty; m.days.add(r.date);
+    const it = items[r.item] ??= { item: r.item, category: r.category, revenue: 0, qty: 0, byMonth: {} };
+    it.revenue += r.total; it.qty += r.qty; it.byMonth[mk] = (it.byMonth[mk] || 0) + r.qty;
+    const d = new Date(r.date + "T00:00:00Z"), wd = d.getUTCDay();
+    dow[wd] += r.total; if (r.hour !== null) hours[r.hour] += r.total;
+    const monday = new Date(d.getTime() - ((wd + 6) % 7) * 864e5).toISOString().slice(0, 10);
+    weeks[monday] = (weeks[monday] || 0) + r.total;
+  }
+  const monthKeys = Object.keys(months).sort();
+  const itemList = Object.values(items).sort((a, b) => b.revenue - a.revenue);
+  const totalRevenue = itemList.reduce((a, b) => a + b.revenue, 0);
+  const sortedDays = [...days].sort();
+  return { months, monthKeys, itemList, totalRevenue, dow, hours, weeks, first: sortedDays[0], last: sortedDays.at(-1) };
+}
+const monthLabel = k => MONTHS.at(+k.slice(5, 7) - 1) + " " + k.slice(0, 4);
+const dayLabel = iso => +iso.slice(8) + " " + MONTHS.at(+iso.slice(5, 7) - 1);
+
+// ---------- Rendering ----------
+let S = null, isSample = true;
+function render() {
+  document.getElementById("period").textContent =
+    `${dayLabel(S.first)} to ${dayLabel(S.last)} ${S.last.slice(0, 4)} · ${GBP(S.totalRevenue)} in sales · ${S.itemList.length} menu items`;
+  document.getElementById("shopName").textContent = isSample ? "Ask your sales: Corner Cup Café" : "Ask your sales";
+  document.getElementById("dataTag").textContent = isSample ? "Sample data · made-up café" : "Your file · stays in this browser";
+  document.getElementById("resetBtn").hidden = isSample;
+
+  // KPIs: latest month vs the one before, per trading day so part-months compare fairly
+  const ks = S.monthKeys, cur = S.months[ks.at(-1)], prev = ks.length > 1 ? S.months[ks.at(-2)] : null;
+  document.getElementById("monthHint").textContent = prev
+    ? `${monthLabel(ks.at(-1))} compared with ${monthLabel(ks.at(-2))}, per trading day.` : monthLabel(ks.at(-1));
+  const perDay = m => m.revenue / m.days.size, itemsPerDay = m => m.qty / m.days.size;
+  const delta = (a, b) => { if (!b) return ""; const p = (a / b - 1) * 100; return `<span class="delta ${p >= 0 ? "up" : "down"}">${p >= 0 ? "▲" : "▼"} ${Math.abs(p).toFixed(1)}%</span>`; };
+  const kpi = (label, value, d) => `<div class="kpi"><div class="label">${label}</div><div class="value">${value}</div>${d}</div>`;
+  document.getElementById("kpis").innerHTML =
+    kpi("Month sales", GBP(cur.revenue), "") +
+    kpi("Sales per day", GBP(perDay(cur)), delta(perDay(cur), prev && perDay(prev))) +
+    kpi("Items per day", Math.round(itemsPerDay(cur)).toLocaleString("en-GB"), delta(itemsPerDay(cur), prev && itemsPerDay(prev)));
+
+  // Weekly sales bars (full weeks only), drawn to one scale
+  const wk = Object.entries(S.weeks).sort(([a], [b]) => a.localeCompare(b));
+  const W = 560, H = 190, padL = 46, padB = 26, padT = 14, plotW = W - padL - 10, plotH = H - padT - padB;
+  const max = Math.max(...wk.map(([, v]) => v)), step = max > 8000 ? 2000 : max > 3000 ? 1000 : 500;
+  const top = Math.ceil(max / step) * step, y = v => padT + plotH - v / top * plotH, bw = plotW / wk.length;
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Weekly sales">`;
+  for (let v = 0; v <= top; v += step) svg += `<line x1="${padL}" x2="${W - 10}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${padL - 6}" y="${y(v) + 4}" text-anchor="end" font-size="11" font-family="IBM Plex Mono, monospace" fill="var(--muted)">£${v / 1000}k</text>`;
+  wk.forEach(([k, v], i) => {
+    const x = padL + i * bw + bw * 0.15, last = i === wk.length - 1;
+    svg += `<rect x="${x}" y="${y(v)}" width="${bw * 0.7}" height="${padT + plotH - y(v)}" rx="2" fill="${last ? "var(--accent)" : "var(--bar)"}"><title>Week of ${dayLabel(k)}: ${GBP(v)}</title></rect>`;
+    if (i % 2 === 0 || last) svg += `<text x="${x + bw * 0.35}" y="${H - 8}" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono, monospace" fill="var(--muted)">${dayLabel(k)}</text>`;
+  });
+  document.getElementById("weekly").innerHTML = svg + `</svg><p class="hint" style="margin:6px 0 0">Sales per week, starting Monday. The first and last weeks may be partial.</p>`;
+
+  // Menu table
+  const n = S.itemList.length, flagged = new Set(S.itemList.slice(-Math.min(3, Math.floor(n / 4))).map(i => i.item));
+  const maxRev = S.itemList[0].revenue;
+  let html = `<thead><tr><th>#</th><th>Item</th><th class="num">Sold</th><th class="num">Revenue</th><th class="num">Share</th><th style="width:22%"></th></tr></thead><tbody>`;
+  S.itemList.forEach((it, i) => {
+    html += `<tr><td class="num">${i + 1}</td><td>${esc(it.item)}${flagged.has(it.item) ? '<span class="flag">Review</span>' : ""}</td><td class="num">${Math.round(it.qty).toLocaleString("en-GB")}</td><td class="num">${GBP(it.revenue)}</td><td class="num">${(it.revenue / S.totalRevenue * 100).toFixed(1)}%</td><td><div class="share" style="width:${Math.max(2, it.revenue / maxRev * 100)}%"></div></td></tr>`;
+  });
+  document.getElementById("items").innerHTML = html + "</tbody>";
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+// Compact text summary that Claude reads
+function summaryText() {
+  const L = [];
+  L.push(`Period: ${S.first} to ${S.last}. Total sales ${GBP2(S.totalRevenue)}. Currency GBP.`);
+  L.push("Monthly totals (sales, items sold, trading days):");
+  for (const k of S.monthKeys) { const m = S.months[k]; L.push(`- ${monthLabel(k)}: ${GBP2(m.revenue)}, ${Math.round(m.qty)} items, ${m.days.size} days`); }
+  L.push(`Items (name | category | total sold | revenue | sold per month ${S.monthKeys.map(monthLabel).join(", ")}):`);
+  for (const it of S.itemList) L.push(`- ${it.item} | ${it.category || "-"} | ${Math.round(it.qty)} | ${GBP2(it.revenue)} | ${S.monthKeys.map(k => Math.round(it.byMonth[k] || 0)).join(", ")}`);
+  L.push("Sales by weekday: " + DAYS.map((d, i) => `${d} ${GBP(S.dow[i])}`).join(", "));
+  if (S.hours.some(v => v > 0)) L.push("Sales by hour of day: " + S.hours.map((v, h) => v ? `${h}:00 ${GBP(v)}` : null).filter(Boolean).join(", "));
+  return L.join("\n");
+}
+
+// ---------- Ask Claude ----------
+const SUGGESTIONS = ["Which items should I take off the menu?", "How did the last month compare with the month before?", "When are my busiest hours and days?", "What's selling more as summer ends?"];
+const chipsEl = document.getElementById("chips"), qEl = document.getElementById("q");
+for (const s of SUGGESTIONS) { const b = document.createElement("button"); b.className = "chip"; b.type = "button"; b.textContent = s; b.onclick = () => { qEl.value = s; ask(); }; chipsEl.append(b); }
+const askBtn = document.getElementById("askBtn"), stopBtn = document.getElementById("stopBtn"), answerEl = document.getElementById("answer"), noteEl = document.getElementById("askNote");
+let sample = null, ctl = null;
+const copyFor = code => ({
+  not_granted: "Asking Claude isn't allowed for this page. The numbers above still work.",
+  sampling_disabled: "Claude isn't available on this account. The numbers above still work.",
+  rate_limited: "Too many questions at once. Wait a minute, then ask again.",
+  session_expired: "Please sign in to Claude again, then ask.",
+  refused: "Claude couldn't answer that one. Try asking it a different way.",
+  prompt_too_large: "This file is too big to summarise in one question. Try a shorter date range."
+})[code] || "Something went wrong reaching Claude. Try again in a moment.";
+function setNote(t) { noteEl.textContent = t || ""; noteEl.hidden = !t; }
+async function ask() {
+  const question = qEl.value.trim();
+  if (!question) { qEl.focus(); return; }
+  if (!sample) { setNote("Asking Claude works when this page is opened in Claude. The numbers above still work."); return; }
+  ctl = new AbortController(); askBtn.disabled = true; stopBtn.hidden = false; setNote("");
+  answerEl.classList.remove("empty"); answerEl.textContent = "Thinking…";
+  const prompt = `You help the owner of a small café understand their till sales. Answer the question below using only the sales summary. ` +
+    `Write for a busy owner: plain English, short sentences, at most 120 words, include the key numbers in £, and end with one practical suggestion. ` +
+    `No markdown headings or tables; simple dashes for lists are fine. If the summary can't answer it, say what data would be needed.\n\n` +
+    `SALES SUMMARY\n${summaryText()}\n\nQUESTION\n${question}`;
+  try {
+    await sample(prompt, { signal: ctl.signal, onText: ({ text }) => { answerEl.textContent = text; } });
+  } catch (e) {
+    answerEl.textContent = e.code === "refused" ? "" : (e.text || "");
+    if (!answerEl.textContent) { answerEl.textContent = "Answers appear here."; answerEl.classList.add("empty"); }
+    if (e.code !== "cancelled") setNote(copyFor(e.code));
+    if (e.code === "not_granted" || e.code === "sampling_disabled") askBtn.disabled = true;
+  } finally {
+    if (!noteEl.textContent.includes("isn't")) askBtn.disabled = false;
+    stopBtn.hidden = true;
+  }
+}
+askBtn.onclick = ask;
+stopBtn.onclick = () => ctl?.abort();
+qEl.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask(); } });
+
+// ---------- File input ----------
+const sampleRows = makeSample();
+document.getElementById("csv").addEventListener("change", async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try { S = summarise(rowsFromCSV(await f.text())); isSample = false; render(); setNote(""); answerEl.textContent = "Answers appear here."; answerEl.classList.add("empty"); }
+  catch (err) { setNote("Couldn't read that file. " + err.message); }
+  e.target.value = "";
+});
+document.getElementById("resetBtn").onclick = () => { S = summarise(sampleRows); isSample = true; render(); };
+
+S = summarise(sampleRows); render();
+(async () => { try { sample = window.claude ? await window.claude.use("sample") : null; } catch { sample = null; } })();
+</script>
