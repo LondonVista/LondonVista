@@ -35,4 +35,4 @@ A translucent floating battery widget and dashboard for MacBooks, iPhones and iP
 
 ### 📫 Find me
 
-[![Email](https://img.shields.io/badge/Email-londonvista%40icloud.com-0a84ff?logo=icloud&logoColor=white)](mailto:londonvista@icloud.com) [![X](https://img.shields.io/badge/X-@London__Vista-000?logo=x)](https://x.com/London_Vista) [![Ko-fi](https://img.shields.io/badge/Support-Ko--fi-ff5e5b?logo=kofi&logoColor=white)](https://ko-fi.com/london_vista)
+[![Email](https://img.shields.io/badge/Email-londonvista%40icloud.com-0a84ff?logo=icloud&logoColor=white)](mailto:londonvista@icloud.com) [![X](https://img.shields.io/badge/X-@London__Vista-000?logo=x)](https://x.com/London_Vista) [![LinkedIn](https://img.shields.io/badge/LinkedIn-londonvista-0a66c2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/londonvista) [![Ko-fi](https://img.shields.io/badge/Support-Ko--fi-ff5e5b?logo=kofi&logoColor=white)](https://ko-fi.com/london_vista)
